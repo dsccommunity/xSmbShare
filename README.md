@@ -1,6 +1,6 @@
-{{AppVeyor build status badge for master branch}}
+[![Build status](https://ci.appveyor.com/api/projects/status/ttp6jlhjyef83sic/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xsmbshare/branch/master)
 
-#{{ModuleName}}
+# xSmbShare
 
 {{Description}}
 
