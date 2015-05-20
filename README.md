@@ -7,6 +7,7 @@ The **xSmbShare** module contains the **xSmbShare** DSC resource for setting up 
 ## Contributing
 Please check out common DSC Resources [contributing guidelines](https://github.com/PowerShell/DscResource.Kit/blob/master/CONTRIBUTING.md).
 
+Hello from Demo
 
 ## Resources
 
