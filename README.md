@@ -34,6 +34,9 @@ Admin shares, default shares, IPC$ share are examples.
 
 ## Versions
 
+### 1.1.0.0
+* Fixed bug in xSmbShare resource which was causing Test-TargetResource to return false negatives when more than three parameters were specified.
+
 ### 1.0.0.0
 
 * Initial release with the following resources 
