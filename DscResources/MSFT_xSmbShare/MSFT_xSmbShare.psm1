@@ -192,6 +192,10 @@ function Set-TargetResource
         [System.String]
         $FolderEnumerationMode,
 
+        [ValidateSet("None","Manual","Programs","Documents","BranchCache")]
+        [System.String]
+        $CachingMode,
+
         [System.String[]]
         $FullAccess,
 
@@ -363,6 +367,10 @@ function Test-TargetResource
         [ValidateSet("AccessBased","Unrestricted")]
         [System.String]
         $FolderEnumerationMode,
+
+        [ValidateSet("None","Manual","Programs","Documents","BranchCache")]
+        [System.String]
+        $CachingMode,
 
         [System.String[]]
         $FullAccess,
