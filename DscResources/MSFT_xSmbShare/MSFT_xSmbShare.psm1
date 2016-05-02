@@ -52,7 +52,8 @@ function Get-TargetResource
         Description = $smbShare.Description
         ConcurrentUserLimit = $smbShare.ConcurrentUserLimit
         EncryptData = $smbShare.EncryptData
-        FolderEnumerationMode = $smbShare.FolderEnumerationMode                
+        FolderEnumerationMode = $smbShare.FolderEnumerationMode
+        CachingMode = $smbShare.CachingMode
         ShareState = $smbShare.ShareState
         ShareType = $smbShare.ShareType
         ShadowCopy = $smbShare.ShadowCopy
@@ -149,6 +150,10 @@ function Set-TargetResource
         [ValidateSet("AccessBased","Unrestricted")]
         [System.String]
         $FolderEnumerationMode,
+
+        [ValidateSet("None","Manual","Programs","Documents","BranchCache")]
+        [System.String]
+        $CachingMode,
 
         [System.String[]]
         $FullAccess,
@@ -301,6 +306,10 @@ function Test-TargetResource
         [System.String]
         $FolderEnumerationMode,
 
+        [ValidateSet("None","Manual","Programs","Documents","BranchCache")]
+        [System.String]
+        $CachingMode,
+
         [System.String[]]
         $FullAccess,
 
@@ -324,7 +333,7 @@ function Test-TargetResource
         }
         elseif ($share.Ensure -eq "Present")
         {
-            $Params = 'Name', 'Path', 'Description', 'ChangeAccess', 'ConcurrentUserLimit', 'EncryptData', 'FolderEnumerationMode', 'FullAccess', 'NoAccess', 'ReadAccess', 'Ensure'
+            $Params = 'Name', 'Path', 'Description', 'ChangeAccess', 'ConcurrentUserLimit', 'EncryptData', 'FolderEnumerationMode', 'CachingMode', 'FullAccess', 'NoAccess', 'ReadAccess', 'Ensure'
             if ($PSBoundParameters.Keys.Where({$_ -in $Params}) | ForEach-Object {Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_})
             { 
                 $testResult = $false
