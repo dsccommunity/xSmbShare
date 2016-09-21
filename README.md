@@ -4,6 +4,9 @@
 
 The **xSmbShare** module contains the **xSmbShare** DSC resource for setting up and configuring an [SMB share](http://technet.microsoft.com/en-us/library/cc734393%28v=WS.10%29.aspx).
 
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
 ## Contributing
 Please check out common DSC Resources [contributing guidelines](https://github.com/PowerShell/DscResource.Kit/blob/master/CONTRIBUTING.md).
 
@@ -33,6 +36,12 @@ Admin shares, default shares, IPC$ share are examples.
 
 
 ## Versions
+
+### Unreleased
+
+### 2.0.0.0
+* Converted appveyor.yml to install Pester from PSGallery instead of from Chocolatey.
+* Added default value of "Present" for the Ensure parameter.  (Note:  due to how the module's logic is written, this is a breaking change; DSC configs that did not specify a value for Ensure would have behaved as though it were set to Present in the Test-TargetResource function, but to absent in Set-TargetResource, removing the share instead of creating it.)
 
 ### 1.1.0.0
 * Fixed bug in xSmbShare resource which was causing Test-TargetResource to return false negatives when more than three parameters were specified.
