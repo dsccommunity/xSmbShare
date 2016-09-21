@@ -1,6 +1,6 @@
 @{
 # Version number of this module.
-ModuleVersion = '1.1.0.0'
+ModuleVersion = '2.0.0.0'
 
 # ID used to uniquely identify this module
 GUID = '8831ca9a-3c47-4a5b-b401-29635dd24381'
@@ -47,12 +47,16 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = '* Converted appveyor.yml to install Pester from PSGallery instead of from Chocolatey.
+* Added default value of "Present" for the Ensure parameter.  (Note:  due to how the module"s logic is written, this is a breaking change; DSC configs that did not specify a value for Ensure would have behaved as though it were set to Present in the Test-TargetResource function, but to absent in Set-TargetResource, removing the share instead of creating it.)
+
+'
 
     } # End of PSData hashtable
 
 } # End of PrivateData hashtable
 }
+
 
 
 
