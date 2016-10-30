@@ -10,6 +10,7 @@ For more information see the [Code of Conduct FAQ](https://opensource.microsoft.
 ## Contributing
 Please check out common DSC Resources [contributing guidelines](https://github.com/PowerShell/DscResource.Kit/blob/master/CONTRIBUTING.md).
 
+Hello from Demo
 
 ## Resources
 
