@@ -114,7 +114,8 @@ function Remove-AccessPermission
     if ($AccessPermission -eq "Change" -or $AccessPermission -eq "Read" -or $AccessPermission -eq "Full")
     {
         Revoke-SmbShareAccess -Name $Name -AccountName $UserName -Force
-    }
+
+}
     else
     {
         UnBlock-SmbShareAccess -Name $Name -AccountName $userName -Force
@@ -179,6 +180,33 @@ function Set-TargetResource
         {
             $psboundparameters.Remove("Ensure")
             Write-Verbose "Creating share $Name to ensure it is Present"
+            
+            # Check for null access before passing to New-SmbShare
+            if (($psboundparameters.ContainsKey("ChangeAccess")) -and ($psboundparameters["ChangeAccess"] -eq $null))
+            {
+                # Remove the parameter
+                $psboundparameters.Remove("ChangeAccess")
+            }
+            
+            if (($psboundparameters.ContainsKey("ReadAccess")) -and ($psboundparameters["ReadAccess"] -eq $null))
+            {
+                # Remove the parameter
+                $psboundparameters.Remove("ReadAccess")
+            }
+            
+            if (($psboundparameters.ContainsKey("FullAccess")) -and ($psboundparameters["FullAccess"] -eq $null))
+            {
+                # Remove the parameter
+                $psboundparameters.Remove("FullAccess")
+            }
+            
+            if (($psboundparameters.ContainsKey("NoAccess")) -and ($psboundparameters["NoAccess"] -eq $null))
+            {
+                # Remove the parameter
+                $psboundparameters.Remove("NoAccess")
+            }
+            
+            # Pass the parameter collection to New-SmbShare
             New-SmbShare @psboundparameters
         }
         else
