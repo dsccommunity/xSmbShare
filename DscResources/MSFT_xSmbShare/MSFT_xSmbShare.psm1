@@ -182,26 +182,30 @@ function Set-TargetResource
             Write-Verbose "Creating share $Name to ensure it is Present"
             
             # Check for null access before passing to New-SmbShare
-            if (($psboundparameters.ContainsKey("ChangeAccess")) -and ($psboundparameters["ChangeAccess"] -eq $null))
+            if (($psboundparameters.ContainsKey("ChangeAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["ChangeAccess"])))
             {
+                Write-Verbose "Parameter ChangeAccess is null or empty, removing from collection."
                 # Remove the parameter
                 $psboundparameters.Remove("ChangeAccess")
             }
             
-            if (($psboundparameters.ContainsKey("ReadAccess")) -and ($psboundparameters["ReadAccess"] -eq $null))
+            if (($psboundparameters.ContainsKey("ReadAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["ReadAccess"])))
             {
+                Write-Verbose "Paramater ReadAccess is null or empty, removing from collection."
                 # Remove the parameter
                 $psboundparameters.Remove("ReadAccess")
             }
             
-            if (($psboundparameters.ContainsKey("FullAccess")) -and ($psboundparameters["FullAccess"] -eq $null))
+            if (($psboundparameters.ContainsKey("FullAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["FullAccess"])))
             {
+                Write-Verbose "Parameter FullAccess is null or empty, removing from collection."
                 # Remove the parameter
                 $psboundparameters.Remove("FullAccess")
             }
             
-            if (($psboundparameters.ContainsKey("NoAccess")) -and ($psboundparameters["NoAccess"] -eq $null))
+            if (($psboundparameters.ContainsKey("NoAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["NoAccess"])))
             {
+                Write-Verbose "Parameter NoAccess is null or empty, removing from collection."
                 # Remove the parameter
                 $psboundparameters.Remove("NoAccess")
             }
