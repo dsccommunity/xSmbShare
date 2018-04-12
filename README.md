@@ -38,6 +38,7 @@ Admin shares, default shares, IPC$ share are examples.
 ## Versions
 
 ### Unreleased
+* Corrected typo on ShareState and ShareType descriptions (Specfies -> Specifies)
 
 ### 2.0.0.0
 * Converted appveyor.yml to install Pester from PSGallery instead of from Chocolatey.
