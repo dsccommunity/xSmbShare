@@ -38,6 +38,8 @@ Admin shares, default shares, IPC$ share are examples.
 ## Versions
 
 ### Unreleased
+
+### 2.1.0.0
 * Corrected typo on ShareState and ShareType descriptions (Specfies -> Specifies)
 
 ### 2.0.0.0
