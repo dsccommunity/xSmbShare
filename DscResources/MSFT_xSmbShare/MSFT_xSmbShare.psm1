@@ -244,53 +244,69 @@ function Set-TargetResource
             
             # Use *SmbShareAccess cmdlets to change access
             $smbshareAccessValues = Get-SmbShareAccess -Name $Name
+
+            # Remove Change permissions
+            $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Change'} `
+                                    | % {
+                                        Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Change
+                                        }
+
             if ($ChangeAccess -ne $null)
             {
-                # Blow off whatever is in there and replace it with this list
-                $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Change'} `
-                                      | % {
-                                            Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Change
-                                          }
-                                  
+				# Add change permissions
                 $changeAccessValue | % {
                                         Set-AccessPermission -ShareName $Name -AccessPermission "Change" -Username $_
                                        }
             }
-            $smbshareAccessValues = Get-SmbShareAccess -Name $Name
-            if ($ReadAccess -ne $null)
-            {
-                # Blow off whatever is in there and replace it with this list
-                $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Read'} `
-                                      | % {
-                                            Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Read
-                                          }
+            
+			$smbshareAccessValues = Get-SmbShareAccess -Name $Name
 
+            # Remove read access
+            $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Read'} `
+                                    | % {
+                                        Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Read
+                                        }
+			
+			if ($ReadAccess -ne $null)
+            {
+				# Add read access
                 $readAccessValue | % {
                                        Set-AccessPermission -ShareName $Name -AccessPermission "Read" -Username $_                        
                                      }
             }
-            $smbshareAccessValues = Get-SmbShareAccess -Name $Name
-            if ($FullAccess -ne $null)
-            {
-                # Blow off whatever is in there and replace it with this list
-                $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Full'} `
-                                      | % {
-                                            Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Full
-                                          }
+            
+			
+			$smbshareAccessValues = Get-SmbShareAccess -Name $Name
+            
+            # Remove full access
+            $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Full'} `
+                                    | % {
+                                        Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Full
+                                        }
+			
 
-                $fullAccessValue | % {
+			if ($FullAccess -ne $null)
+            {
+
+                # Add full access
+				$fullAccessValue | % {
                                         Set-AccessPermission -ShareName $Name -AccessPermission "Full" -Username $_                        
                                      }
             }
+
             $smbshareAccessValues = Get-SmbShareAccess -Name $Name
+
+            # Remove explicit deny
+            $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Deny'} `
+                                    | % {
+                                        Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission No
+                                        }
+
+
             if ($NoAccess -ne $null)
             {
-                # Blow off whatever is in there and replace it with this list
-                $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Deny'} `
-                                      | % {
-                                            Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission No
-                                          }
-                $noAccessValue | % {
+                # Add explicit deny
+				$noAccessValue | % {
                                       Set-AccessPermission -ShareName $Name -AccessPermission "No" -Username $_
                                    }
             }
