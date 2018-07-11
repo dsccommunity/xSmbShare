@@ -253,43 +253,43 @@ function Set-TargetResource
 
             if ($ChangeAccess -ne $null)
             {
-				# Add change permissions
+                # Add change permissions
                 $changeAccessValue | ForEach-Object {
                                         Set-AccessPermission -ShareName $Name -AccessPermission "Change" -Username $_
                                        }
             }
             
-			$smbshareAccessValues = Get-SmbShareAccess -Name $Name
+            $smbshareAccessValues = Get-SmbShareAccess -Name $Name
 
             # Remove read access
             $smbshareAccessValues | Where-Object {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Read'} `
                                     | ForEach-Object {
                                         Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Read
                                         }
-			
-			if ($ReadAccess -ne $null)
+            
+            if ($ReadAccess -ne $null)
             {
-				# Add read access
+                # Add read access
                 $readAccessValue | ForEach-Object {
                                        Set-AccessPermission -ShareName $Name -AccessPermission "Read" -Username $_                        
                                      }
             }
             
-			
-			$smbshareAccessValues = Get-SmbShareAccess -Name $Name
+            
+            $smbshareAccessValues = Get-SmbShareAccess -Name $Name
             
             # Remove full access
             $smbshareAccessValues | Where-Object {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Full'} `
                                     | ForEach-Object {
                                         Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Full
                                         }
-			
+            
 
-			if ($FullAccess -ne $null)
+            if ($FullAccess -ne $null)
             {
 
                 # Add full access
-				$fullAccessValue | ForEach-Object {
+                $fullAccessValue | ForEach-Object {
                                         Set-AccessPermission -ShareName $Name -AccessPermission "Full" -Username $_                        
                                      }
             }
@@ -306,7 +306,7 @@ function Set-TargetResource
             if ($NoAccess -ne $null)
             {
                 # Add explicit deny
-				$noAccessValue | ForEach-Object {
+                $noAccessValue | ForEach-Object {
                                       Set-AccessPermission -ShareName $Name -AccessPermission "No" -Username $_
                                    }
             }
