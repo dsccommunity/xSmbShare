@@ -126,13 +126,10 @@ try
             )
         )
 
-        Describe 'MSFT_xSmbShare\Get-TargetResource' -Tag 'Get' 
-        {
+        Describe 'MSFT_xSmbShare\Get-TargetResource' -Tag 'Get' {
 
-            Context 'When the system is in the desired state' 
-            {
-                BeforeAll 
-                {
+            Context 'When the system is in the desired state' {
+                BeforeAll {
                     # Per context-block initialization
                 }
 
@@ -147,32 +144,26 @@ try
                 # Call Get-TargetResource
                 $result = Get-TargetResource @testParameters
 
-                It 'Should mock call to Get-SmbShare and return membership' 
-                {
+                It 'Should mock call to Get-SmbShare and return membership' {
                     $result.ChangeAccess | Should Be $mockSmbShareAccess.ChangeAccess
                     $result.ReadAccess | Should Be $mockSmbShareAccess.ReadAccess
                     $result.FullAccess | Should Be $mockSmbShareAccess.FullAccess
                     $result.NoAccess | Should Be $mockSmbShareAccess.NoAccess
                 }
 
-                It 'Should call the mock function Get-SmbShare'
-                {
+                It 'Should call the mock function Get-SmbShare' {
                     Assert-MockCalled Get-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
 
-                It 'Should Call the mock function Get-SmbShareAccess'
-                {
+                It 'Should Call the mock function Get-SmbShareAccess' {
                     Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
             }
         }
 
-        Describe 'MSFT_xSmbShare\Set-TargetResource' -Tag 'Set' 
-        {
-            Context 'When the system is not in the desired state' 
-            {
-                BeforeAll 
-                {
+        Describe 'MSFT_xSmbShare\Set-TargetResource' -Tag 'Set' {
+            Context 'When the system is not in the desired state' {
+                BeforeAll {
                     # Per context-block initialization
                 }
 
@@ -243,35 +234,29 @@ try
 
                 $result = Set-TargetResource @testParameters
 
-                It 'Should alter permissions'
-                {
+                It 'Should alter permissions' {
                     $script:ChangeAccess | Should Be $mockChangeAccess
                     $script:ReadAccess | Should Be $mockReadAccess
                     $script:FullAccess | Should Be $mockFullAccess
                     $script:NoAccess | Should Be $mockNoAcess
                 }
                 
-                It 'Should call the mock function Get-SmbShare'
-                {
+                It 'Should call the mock function Get-SmbShare' {
                     Assert-MockCalled Get-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
 
-                It 'Should Call the mock function Get-SmbShareAccess'
-                {
+                It 'Should Call the mock function Get-SmbShareAccess' {
                     Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
 
-                It 'Should call the mock function Set-SmbShare'
-                {
+                It 'Should call the mock function Set-SmbShare' {
                     Assert-MockCalled Set-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
             }
         }
 
-        Describe 'MSFT_xSmbShare\Test-TargetResource' -Tag 'Test' 
-        {
-            Context 'When the system is in the desired state' 
-            {
+        Describe 'MSFT_xSmbShare\Test-TargetResource' -Tag 'Test' {
+            Context 'When the system is in the desired state' {
 
                 # Set the testParameter collection
                 $testParameters = @{ChangeAccess = $mockSmbShare.ChangeAccess}
@@ -287,8 +272,7 @@ try
                 $testParameters += @{Ensure = "Present"}
 
 
-                BeforeAll 
-                {
+                BeforeAll {
                     # Per context-block initialization
                 }
 
@@ -300,25 +284,21 @@ try
                 # Call the Test-TargetResource
                 $result = Test-TargetResource @testParameters
 
-                It 'Should return false' 
-                {
+                It 'Should return false' {
                     # Result should be false
                     $result | Should be $false
                 }
                 
-                It 'Should call the mock function Get-SmbShare'
-                {
+                It 'Should call the mock function Get-SmbShare' {
                     Assert-MockCalled Get-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
 
-                It 'Should Call the mock function Get-SmbShareAccess'
-                {
+                It 'Should Call the mock function Get-SmbShareAccess' {
                     Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
             }
 
-            Context 'When the system is not in the desired state' 
-            {
+            Context 'When the system is not in the desired state' {
 
                 # Set the testParameter collection
                 $testParameters = @{ChangeAccess = $mockDefaultChangeAccess}
@@ -337,20 +317,17 @@ try
                 $result = Test-TargetResource @testParameters
 
 
-                It 'Should return true' 
-                {
+                It 'Should return true' {
 
                     # Result should be true
                     $result | Should be $true
                 }
                 
-                It 'Should call the mock function Get-SmbShare'
-                {
+                It 'Should call the mock function Get-SmbShare' {
                     Assert-MockCalled Get-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
 
-                It 'Should Call the mock function Get-SmbShareAccess'
-                {
+                It 'Should Call the mock function Get-SmbShareAccess' {
                     Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
                 }
             }
