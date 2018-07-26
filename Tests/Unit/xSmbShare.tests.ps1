@@ -21,35 +21,12 @@ $TestEnvironment = Initialize-TestEnvironment `
 
 function Invoke-TestSetup
 {
-    # Set up the mock users to test with
-    Create-MockUserObjects -userCollection $mockUserAccounts
 }
 
 function Invoke-TestCleanup
 {
-    # Remove the users we were using for testing
-    Remove-MockUserObjects -userCollection $mockUserAccounts
-
     # Restore the test environment
     Restore-TestEnvironment -TestEnvironment $TestEnvironment
-}
-
-function Create-MockUserObjects
-{
-    # Define parameters
-    Param($userCollection)
-
-    # Loop through collection and create user accounts
-    $userCollection | ForEach-Object {New-LocalUser -Name $_ -Description "Dummy account $_" -NoPassword}
-}
-
-function Remove-MockUserObjects
-{
-    # Define parameters
-    Param($userCollection)
-
-    # Loop through collectionand remove users
-    $userCollection | ForEach-Object {Remove-LocalUser -Name $_}
 }
 
 
@@ -57,12 +34,13 @@ function Remove-MockUserObjects
 try
 {
     # Define test user accounts
-    $mockUserAccounts = @()
-    $mockUserAccounts += "User1"
-    $mockUserAccounts += "User2"
-    $mockUserAccounts += "User3"
-    $mockUserAccounts += "User4"
-    $mockUserAccounts += "User5"
+    $mockUserAccounts = @(
+    "User1",
+    "User2",
+    "User3",
+    "User4",
+    "User5"
+    )
 
     # Declare mock objects
     $mockChangeAccess = @("User1")
@@ -138,25 +116,27 @@ try
                 Mock Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
 
                 # Set testParameters
-                $testParameters = @{Name = $mockSmbShare.Name}
-                $testParamters += @{Path = $mockSmbShare.Path}
+                $testParameters = @{
+                    Name = $mockSmbShare.Name
+                    Path = $mockSmbShare.Path
+                }
 
                 # Call Get-TargetResource
                 $result = Get-TargetResource @testParameters
 
                 It 'Should mock call to Get-SmbShare and return membership' {
-                    $result.ChangeAccess | Should Be $mockSmbShareAccess.ChangeAccess
-                    $result.ReadAccess | Should Be $mockSmbShareAccess.ReadAccess
-                    $result.FullAccess | Should Be $mockSmbShareAccess.FullAccess
-                    $result.NoAccess | Should Be $mockSmbShareAccess.NoAccess
+                    $result.ChangeAccess | Should Be $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}
+                    $result.ReadAccess | Should Be $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}
+                    $result.FullAccess | Should Be $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}
+                    $result.NoAccess | Should Be $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Deny'}
                 }
 
                 It 'Should call the mock function Get-SmbShare' {
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
                 }
             }
         }
@@ -168,22 +148,24 @@ try
                 }
 
                 # Set the testParameter collection
-                $testParameters = @{ChangeAccess = $mockDefaultChangeAccess}
-                $testParameters += @{ReadAccess = $mockDefaultReadAccess}
-                $testParameters += @{FullAccess = $mockDefaultFullAccess}
-                $testParameters += @{NoAccess = $mockDefaultNoAccess}
-                $testParameters += @{Name = $mockSmbShare.Name}
-                $testParameters += @{Path = $mockSmbShare.Path}
-                $testParameters += @{Description = $mockSmbShare.Description}
-                $testParameters += @{ConcurrentUserLimit = $mockSmbShare.ConcurrentUserLimit}
-                $testParameters += @{EncryptData = $mockSmbShare.EncryptData}
-                $testParameters += @{FolderEnumerationMode = $mockSmbShare.FolderEnumerationMode}
-                $testParameters += @{Ensure = "Present"}
+                $testParameters = @{
+                    ChangeAccess = $mockDefaultChangeAccess
+                    ReadAccess = $mockDefaultReadAccess
+                    FullAccess = $mockDefaultFullAccess
+                    NoAccess = $mockDefaultNoAccess
+                    Name = $mockSmbShare.Name
+                    Path = $mockSmbShare.Path
+                    Description = $mockSmbShare.Description
+                    ConcurrentUserLimit = $mockSmbShare.ConcurrentUserLimit
+                    EncryptData = $mockSmbShare.EncryptData
+                    FolderEnumerationMode = $mockSmbShare.FolderEnumerationMode
+                    Ensure = "Present"
+                }
 
                 # Set the script level parameters
-                $script:ChangeAccess = $mockSmbShareAccess.Change
-                $script:ReadAccess = $mockSmbShareAccess.Read
-                $script:FullAccess = $mockSmbShareAccess.Full
+                $script:ChangeAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}
+                $script:ReadAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}
+                $script:FullAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}
                 $script:NoAccess = @()
 
                 # Set mock function calls
@@ -259,18 +241,19 @@ try
             Context 'When the system is in the desired state' {
 
                 # Set the testParameter collection
-                $testParameters = @{ChangeAccess = $mockSmbShare.ChangeAccess}
-                $testParameters += @{ReadAccess = $mockSmbShare.ReadAccess}
-                $testParameters += @{FullAccess = $mockSmbShare.FullAccess}
-                $testParameters += @{NoAccess = $mockSmbShare.NoAccess}
-                $testParameters += @{Name = $mockSmbShare.Name}
-                $testParameters += @{Path = $mockSmbShare.Path}
-                $testParameters += @{Description = $mockSmbShare.Description}
-                $testParameters += @{ConcurrentUserLimit = $mockSmbShare.ConcurrentUserLimit}
-                $testParameters += @{EncryptData = $mockSmbShare.EncryptData}
-                $testParameters += @{FolderEnumerationMode = $mockSmbShare.FolderEnumerationMode}
-                $testParameters += @{Ensure = "Present"}
-
+                $testParameters = @{
+                    ChangeAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}
+                    ReadAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}
+                    FullAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}
+                    NoAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Deny'}
+                    Name = $mockSmbShare.Name
+                    Path = $mockSmbShare.Path
+                    Description = $mockSmbShare.Description
+                    ConcurrentUserLimit = $mockSmbShare.ConcurrentUserLimit
+                    EncryptData = $mockSmbShare.EncryptData
+                    FolderEnumerationMode = $mockSmbShare.FolderEnumerationMode
+                    Ensure = "Present"
+                }
 
                 BeforeAll {
                     # Per context-block initialization
@@ -301,18 +284,19 @@ try
             Context 'When the system is not in the desired state' {
 
                 # Set the testParameter collection
-                $testParameters = @{ChangeAccess = $mockDefaultChangeAccess}
-                $testParameters += @{ReadAccess = $mockDefaultReadAccess}
-                $testParameters += @{FullAccess = $mockDefaultFullAccess}
-                $testParameters += @{NoAccess = $mockDefaultNoAccess}
-                $testParameters += @{Name = $mockSmbShare.Name}
-                $testParameters += @{Path = $mockSmbShare.Path}
-                $testParameters += @{Description = $mockSmbShare.Description}
-                $testParameters += @{ConcurrentUserLimit = $mockSmbShare.ConcurrentUserLimit}
-                $testParameters += @{EncryptData = $mockSmbShare.EncryptData}
-                $testParameters += @{FolderEnumerationMode = $mockSmbShare.FolderEnumerationMode}
-                $testParameters += @{Ensure = "Present"}
-
+                $testParameters = @{
+                    ChangeAccess = $mockDefaultChangeAccess
+                    ReadAccess = $mockDefaultReadAccess
+                    FullAccess = $mockDefaultFullAccess
+                    NoAccess = $mockDefaultNoAccess
+                    Name = $mockSmbShare.Name
+                    Path = $mockSmbShare.Path
+                    Description = $mockSmbShare.Description
+                    ConcurrentUserLimit = $mockSmbShare.ConcurrentUserLimit
+                    EncryptData = $mockSmbShare.EncryptData
+                    FolderEnumerationMode = $mockSmbShare.FolderEnumerationMode
+                    Ensure = "Present"
+                }
 
                 $result = Test-TargetResource @testParameters
 
