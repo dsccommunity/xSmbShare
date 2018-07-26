@@ -72,7 +72,7 @@ try
             Add-Member -MemberType NoteProperty -Name 'Description' 'Dummy share for unit testing' -PassThru |
             Add-Member -MemberType NoteProperty -Name 'ConcurrentUserLimit' -Value 10 -PassThru |
             Add-Member -MemberType NoteProperty -Name 'EncryptData' -Value $false -PassThru |
-            Add-Member -MemberType NoteProperty -Name 'FolderEnumerationMode' -Value 0 -PassThru | # 0 AccessBased | 1 Unrestricted
+            Add-Member -MemberType NoteProperty -Name 'FolderEnumerationMode' -Value "AccessBased" -PassThru | # 0 AccessBased | 1 Unrestricted, but method expects text
             Add-Member -MemberType NoteProperty -Name 'SharedState' -Value 1 -PassThru | # 0 Pending | 1 Online | 2 Offline
             Add-Member -MemberType NoteProperty -Name 'ShadowCopy' -Value $false -PassThru |
             Add-Member -MemberType NoteProperty -Name 'Special' -Value $false -PassThru 
