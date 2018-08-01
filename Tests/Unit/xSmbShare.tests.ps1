@@ -273,11 +273,11 @@ try
                 }
                 
                 It 'Should call the mock function Get-SmbShare' {
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
                 }
             }
 
