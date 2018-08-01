@@ -77,7 +77,7 @@ try
             Add-Member -MemberType NoteProperty -Name 'ShadowCopy' -Value $false -PassThru |
             Add-Member -MemberType NoteProperty -Name 'Special' -Value $false -PassThru 
         )
-
+       
         $mockSmbShareAccess = @((
             New-Object -TypeName Object |
             Add-Member -MemberType NoteProperty -Name 'Name' -Value 'DummyShare' -PassThru |
@@ -125,10 +125,10 @@ try
                 $result = Get-TargetResource @testParameters
 
                 It 'Should mock call to Get-SmbShare and return membership' {
-                    $result.ChangeAccess | Should Be $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}
-                    $result.ReadAccess | Should Be $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}
-                    $result.FullAccess | Should Be $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}
-                    $result.NoAccess | Should Be $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Deny'}
+                    $result.ChangeAccess[0] | Should Be ($mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}).AccountName
+                    $result.ReadAccess[0] | Should Be ($mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}).AccountName
+                    $result.FullAccess[0] | Should Be ($mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}).AccountName
+                    $result.NoAccess[0] | Should BeNullOrEmpty
                 }
 
                 It 'Should call the mock function Get-SmbShare' {
