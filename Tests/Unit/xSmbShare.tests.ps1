@@ -245,7 +245,7 @@ try
                     ChangeAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}
                     ReadAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}
                     FullAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}
-                    NoAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Deny'}
+                    
                     Name = $mockSmbShare.Name
                     Path = $mockSmbShare.Path
                     Description = $mockSmbShare.Description
