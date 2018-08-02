@@ -112,8 +112,8 @@ try
                 }
 
                 # Mock the command to get the acl
-                Mock Get-SmbShare -MockWith { return @($mockSmbShare)}
-                Mock Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
+                Mock -CommandName Get-SmbShare -MockWith { return @($mockSmbShare)}
+                Mock -CommandName Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
 
                 # Set testParameters
                 $testParameters = @{
@@ -122,9 +122,10 @@ try
                 }
 
                 # Call Get-TargetResource
-                $result = Get-TargetResource @testParameters
+                
 
                 It 'Should mock call to Get-SmbShare and return membership' {
+                    $result = Get-TargetResource @testParameters
                     $result.ChangeAccess[0] | Should Be ($mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}).AccountName
                     $result.ReadAccess[0] | Should Be ($mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}).AccountName
                     $result.FullAccess[0] | Should Be ($mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}).AccountName
@@ -132,10 +133,12 @@ try
                 }
 
                 It 'Should call the mock function Get-SmbShare' {
+                    $result = Get-TargetResource @testParameters
                     Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
+                    $result = Get-TargetResource @testParameters
                     Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
                 }
             }
@@ -169,10 +172,10 @@ try
                 $script:NoAccess = @()
 
                 # Set mock function calls
-                Mock Get-SmbShare -MockWith { return @($mockSmbShare)}
-                Mock Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
-                Mock Set-SmbShare -MockWith { return $null}
-                Mock Grant-SmbShareAccess -MockWith {
+                Mock -CommandName Get-SmbShare -MockWith { return @($mockSmbShare)}
+                Mock -CommandName Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
+                Mock -CommandName Set-SmbShare -MockWith { return $null}
+                Mock -CommandName Grant-SmbShareAccess -MockWith {
                     switch($AccessPermission)
                     {
                         "Change"
@@ -210,13 +213,14 @@ try
                         }
                     }
                 }
-                Mock Unblock-SmbShareAccess -MockWith {
+                Mock -CommandName Unblock-SmbShareAccess -MockWith {
                     $script:NoAccess = $script:NoAccess | Where-Object {$_ -ne $UserName}
                 }
 
-                $result = Set-TargetResource @testParameters
+                
 
                 It 'Should alter permissions' {
+                    $result = Set-TargetResource @testParameters
                     $script:ChangeAccess | Should Be $mockChangeAccess
                     $script:ReadAccess | Should Be $mockReadAccess
                     $script:FullAccess | Should Be $mockFullAccess
@@ -224,15 +228,18 @@ try
                 }
                 
                 It 'Should call the mock function Get-SmbShare' {
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    $result = Set-TargetResource @testParameters
+                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    $result = Set-TargetResource @testParameters
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
                 }
 
                 It 'Should call the mock function Set-SmbShare' {
-                    Assert-MockCalled Set-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    $result = Set-TargetResource @testParameters
+                    Assert-MockCalled Set-SmbShare -Exactly -Times 1 -Scope Context
                 }
             }
         }
@@ -260,23 +267,28 @@ try
                 }
 
                 # Set mock function calls
-                Mock Get-SmbShare -MockWith { return @($mockSmbShare)}
-                Mock Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
+                Mock -CommandName Get-SmbShare -MockWith { return @($mockSmbShare)}
+                Mock -CommandName Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
                 
-
-                # Call the Test-TargetResource
-                $result = Test-TargetResource @testParameters
-
                 It 'Should return false' {
+                    # Call the Test-TargetResource
+                    $result = Test-TargetResource @testParameters
+                   
                     # Result should be false
                     $result | Should be $false
                 }
                 
                 It 'Should call the mock function Get-SmbShare' {
+                    # Call the Test-TargetResource
+                    $result = Test-TargetResource @testParameters
+
                     Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
+                    # Call the Test-TargetResource
+                    $result = Test-TargetResource @testParameters
+
                     Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
                 }
             }
@@ -298,21 +310,25 @@ try
                     Ensure = "Present"
                 }
 
-                $result = Test-TargetResource @testParameters
-
+                # Set mock function calls
+                Mock -CommandName Get-SmbShare -MockWith { return @($mockSmbShare)}
+                Mock -CommandName Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}               
 
                 It 'Should return true' {
+                    $result = Test-TargetResource @testParameters
 
                     # Result should be true
                     $result | Should be $true
                 }
                 
                 It 'Should call the mock function Get-SmbShare' {
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    $result = Test-TargetResource @testParameters
+                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -ModuleName $script:DSCResourceName -Scope Context
+                    $result = Test-TargetResource @testParameters
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
                 }
             }
         }
