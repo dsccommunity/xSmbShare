@@ -234,7 +234,7 @@ try
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
                     $result = Set-TargetResource @testParameters
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope It
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 4 -Scope It
                 }
 
                 It 'Should call the mock function Set-SmbShare' {
@@ -300,7 +300,7 @@ try
                     ChangeAccess = $mockDefaultChangeAccess
                     ReadAccess = $mockDefaultReadAccess
                     FullAccess = $mockDefaultFullAccess
-                    NoAccess = $mockDefaultNoAccess
+                    
                     Name = $mockSmbShare.Name
                     Path = $mockSmbShare.Path
                     Description = $mockSmbShare.Description
