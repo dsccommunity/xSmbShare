@@ -94,6 +94,47 @@ function Set-AccessPermission
     }
 }
 
+Function Set-BoundParameters
+{
+    # Define parameters
+    Param
+    (
+        $psboundparameters
+    )
+
+    # Check for null access before passing to New-SmbShare
+    if (($psboundparameters.ContainsKey("ChangeAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["ChangeAccess"])))
+    {
+        Write-Verbose "Parameter ChangeAccess is null or empty, removing from collection."
+        # Remove the parameter
+        $psboundparameters.Remove("ChangeAccess")
+    }
+            
+    if (($psboundparameters.ContainsKey("ReadAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["ReadAccess"])))
+    {
+        Write-Verbose "Paramater ReadAccess is null or empty, removing from collection."
+        # Remove the parameter
+        $psboundparameters.Remove("ReadAccess")
+    }
+            
+    if (($psboundparameters.ContainsKey("FullAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["FullAccess"])))
+    {
+        Write-Verbose "Parameter FullAccess is null or empty, removing from collection."
+        # Remove the parameter
+        $psboundparameters.Remove("FullAccess")
+    }
+            
+    if (($psboundparameters.ContainsKey("NoAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["NoAccess"])))
+    {
+        Write-Verbose "Parameter NoAccess is null or empty, removing from collection."
+        # Remove the parameter
+        $psboundparameters.Remove("NoAccess")
+    }
+
+    # Return the parameter collection
+    return $psboundparameters
+}
+
 function Remove-AccessPermission
 {
     [CmdletBinding()]
@@ -362,6 +403,10 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present'
     )
+    
+    # Alter the bound parameters, removing anything that is null or emtpy
+    $PSBoundParameters = Set-BoundParameters -psboundparameters $PSBoundParameters
+    
     $testResult = $false;
     $share = Get-TargetResource -Name $Name -Path $Path -ErrorAction SilentlyContinue -ErrorVariable ev
     if ($Ensure -ne "Absent")
@@ -373,7 +418,7 @@ function Test-TargetResource
         elseif ($share.Ensure -eq "Present")
         {
             $Params = 'Name', 'Path', 'Description', 'ChangeAccess', 'ConcurrentUserLimit', 'EncryptData', 'FolderEnumerationMode', 'FullAccess', 'NoAccess', 'ReadAccess', 'Ensure'
-            if ($PSBoundParameters.Keys.Where({($_ -in $Params) -and ($share.$_ -ne $null)}) | ForEach-Object {Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_})
+            if ($PSBoundParameters.Keys.Where({($_ -in $Params)}) | ForEach-Object {Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_})
             { 
                 $testResult = $false
             }
