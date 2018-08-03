@@ -373,7 +373,7 @@ function Test-TargetResource
         elseif ($share.Ensure -eq "Present")
         {
             $Params = 'Name', 'Path', 'Description', 'ChangeAccess', 'ConcurrentUserLimit', 'EncryptData', 'FolderEnumerationMode', 'FullAccess', 'NoAccess', 'ReadAccess', 'Ensure'
-            if ($PSBoundParameters.Keys.Where({$_ -in $Params}) | ForEach-Object {Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_})
+            if ($PSBoundParameters.Keys.Where({($_ -in $Params) -and ($share.$_ -ne $null)}) | ForEach-Object {Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_})
             { 
                 $testResult = $false
             }
