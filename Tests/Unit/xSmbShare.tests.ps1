@@ -134,12 +134,12 @@ try
 
                 It 'Should call the mock function Get-SmbShare' {
                     $result = Get-TargetResource @testParameters
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope It
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
                     $result = Get-TargetResource @testParameters
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope It
                 }
             }
         }
@@ -229,17 +229,17 @@ try
                 
                 It 'Should call the mock function Get-SmbShare' {
                     $result = Set-TargetResource @testParameters
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope It
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
                     $result = Set-TargetResource @testParameters
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope It
                 }
 
                 It 'Should call the mock function Set-SmbShare' {
                     $result = Set-TargetResource @testParameters
-                    Assert-MockCalled Set-SmbShare -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Set-SmbShare -Exactly -Times 1 -Scope It
                 }
             }
         }
@@ -282,14 +282,14 @@ try
                     # Call the Test-TargetResource
                     $result = Test-TargetResource @testParameters
 
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope It
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
                     # Call the Test-TargetResource
                     $result = Test-TargetResource @testParameters
 
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope It
                 }
             }
 
@@ -323,12 +323,12 @@ try
                 
                 It 'Should call the mock function Get-SmbShare' {
                     $result = Test-TargetResource @testParameters
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope It
                 }
 
                 It 'Should Call the mock function Get-SmbShareAccess' {
                     $result = Test-TargetResource @testParameters
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope Context
+                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope It
                 }
             }
         }
