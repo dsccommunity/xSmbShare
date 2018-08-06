@@ -245,14 +245,13 @@ try
         }
 
         Describe 'MSFT_xSmbShare\Test-TargetResource' -Tag 'Test' {
-            Context 'When the system is in the desired state' {
+            Context 'When the system is not in the desired state' {
 
                 # Set the testParameter collection
                 $testParameters = @{
                     ChangeAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}
                     ReadAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}
                     FullAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}
-                    
                     Name = $mockSmbShare.Name
                     Path = $mockSmbShare.Path
                     Description = $mockSmbShare.Description
@@ -293,7 +292,7 @@ try
                 }
             }
 
-            Context 'When the system is not in the desired state' {
+            Context 'When the system is in the desired state' {
 
                 # Set the testParameter collection
                 $testParameters = @{
