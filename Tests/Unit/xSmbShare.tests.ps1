@@ -252,7 +252,7 @@ try
                     ChangeAccess = $mockChangeAccess
                     ReadAccess = $mockReadAccess
                     FullAccess = $mockFullAccess
-                    NOAccess = $mockNoAcess
+                    NoAccess = $mockNoAcess
                     Name = $mockSmbShare.Name
                     Path = $mockSmbShare.Path
                     Description = $mockSmbShare.Description
