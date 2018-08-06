@@ -297,7 +297,8 @@ try
 
                 # Set the testParameter collection
                 $testParameters = @{
-                    ChangeAccess = $mockDefaultChangeAccess
+                    #ChangeAccess = $mockDefaultChangeAccess
+                    ChangeAccess = $mockChangeAccess
                     ReadAccess = $mockDefaultReadAccess
                     FullAccess = $mockDefaultFullAccess
                     NoAccess = $mockDefaultNoAccess
