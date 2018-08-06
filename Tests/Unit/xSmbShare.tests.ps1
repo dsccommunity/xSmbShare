@@ -249,9 +249,10 @@ try
 
                 # Set the testParameter collection
                 $testParameters = @{
-                    ChangeAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}
-                    ReadAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}
-                    FullAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}
+                    ChangeAccess = $mockChangeAccess
+                    ReadAccess = $mockReadAccess
+                    FullAccess = $mockFullAccess
+                    NOAccess = $mockNoAcess
                     Name = $mockSmbShare.Name
                     Path = $mockSmbShare.Path
                     Description = $mockSmbShare.Description
@@ -299,7 +300,7 @@ try
                     ChangeAccess = $mockDefaultChangeAccess
                     ReadAccess = $mockDefaultReadAccess
                     FullAccess = $mockDefaultFullAccess
-                    
+                    NoAccess = $mockDefaultNoAccess
                     Name = $mockSmbShare.Name
                     Path = $mockSmbShare.Path
                     Description = $mockSmbShare.Description
