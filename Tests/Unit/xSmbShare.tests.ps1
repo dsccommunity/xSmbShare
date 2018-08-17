@@ -280,10 +280,10 @@ try
         ShareType = $mocksmbShare.ShareType
         ShadowCopy = $mocksmbShare.ShadowCopy
         Special = $mocksmbShare.Special
-        ChangeAccess = $mockchangeAccess
-        ReadAccess = $mockreadAccess
-        FullAccess = $mockfullAccess
-        NoAccess = $mocknoAccess     
+        ChangeAccess = $mockDefaultchangeAccess
+        ReadAccess = $mockDefaultreadAccess
+        FullAccess = $mockDefaultfullAccess
+        NoAccess = $mockDefaultnoAccess     
         Ensure = if($mocksmbShare) {"Present"} else {"Absent"}
         }
     }
@@ -302,7 +302,7 @@ try
                 # Set the testParameter collection
                 $testParameters = @{
                     #ChangeAccess = $mockDefaultChangeAccess
-                    ChangeAccess = $mockChangeAccess
+                    ChangeAccess = $mockDefaultChangeAccess
                     ReadAccess = $mockDefaultReadAccess
                     FullAccess = $mockDefaultFullAccess
                     NoAccess = $mockDefaultNoAccess
