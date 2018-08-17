@@ -284,7 +284,7 @@ try
         ReadAccess = $mockDefaultreadAccess
         FullAccess = $mockDefaultfullAccess
         NoAccess = $mockDefaultnoAccess     
-        Ensure = if($mocksmbShare) {"Present"} else {"Absent"}
+        Ensure = "Present"
         }
     }
                 
