@@ -269,7 +269,24 @@ try
                 # Set mock function calls
                 Mock -CommandName Get-SmbShare -MockWith { return @($mockSmbShare)}
                 Mock -CommandName Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
-                Mock -CommandName Get-TargetResource -MockWith { return $false}
+                Mock -CommandName Get-TargetResource -MockWith { return @{
+        Name = $mocksmbShare.Name
+        Path = $mocksmbShare.Path
+        Description = $mocksmbShare.Description
+        ConcurrentUserLimit = $mocksmbShare.ConcurrentUserLimit
+        EncryptData = $mocksmbShare.EncryptData
+        FolderEnumerationMode = $mocksmbShare.FolderEnumerationMode                
+        ShareState = $mocksmbShare.ShareState
+        ShareType = $mocksmbShare.ShareType
+        ShadowCopy = $mocksmbShare.ShadowCopy
+        Special = $mocksmbShare.Special
+        ChangeAccess = $mockchangeAccess
+        ReadAccess = $mockreadAccess
+        FullAccess = $mockfullAccess
+        NoAccess = $mocknoAccess     
+        Ensure = if($mocksmbShare) {"Present"} else {"Absent"}
+        }
+    }
                 
                 It 'Should return false' {
                     # Call the Test-TargetResource
@@ -277,20 +294,6 @@ try
                    
                     # Result should be false
                     $result | Should be $false
-                }
-                
-                It 'Should call the mock function Get-SmbShare' {
-                    # Call the Test-TargetResource
-                    $result = Test-TargetResource @testParameters
-
-                    Assert-MockCalled Get-SmbShare -Exactly -Times 1 -Scope It
-                }
-
-                It 'Should Call the mock function Get-SmbShareAccess' {
-                    # Call the Test-TargetResource
-                    $result = Test-TargetResource @testParameters
-
-                    Assert-MockCalled Get-SmbShareAccess -Exactly -Times 1 -Scope It
                 }
             }
 
