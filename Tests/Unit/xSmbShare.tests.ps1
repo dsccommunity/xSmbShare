@@ -269,6 +269,7 @@ try
                 # Set mock function calls
                 Mock -CommandName Get-SmbShare -MockWith { return @($mockSmbShare)}
                 Mock -CommandName Get-SmbShareAccess -MockWith { return @($mockSmbShareAccess)}
+                Mock -CommandName Get-TargetResource -MockWith { return $false}
                 
                 It 'Should return false' {
                     # Call the Test-TargetResource
