@@ -33,24 +33,6 @@ function Invoke-TestCleanup
 # Begin Testing
 try
 {
-    # Define test user accounts
-    $mockUserAccounts = @(
-    "User1",
-    "User2",
-    "User3",
-    "User4",
-    "User5"
-    )
-
-    # Declare mock objects
-    $mockChangeAccess = @("User1")
-    $mockReadAccess = @("User2")
-    $mockFullAccess = @("User3", "User5")
-    $mockNoAcess = @("User4")
-    $mockDefaultChangeAccess = @("User2")
-    $mockDefaultReadAccess = @("User3")
-    $mockDefaultFullAccess = @("User1")
-    $mockDefaultNoAccess = @()
     
     Invoke-TestSetup
 
@@ -63,6 +45,26 @@ try
         # https://www.simple-talk.com/sysadmin/powershell/practical-powershell-unit-testing-getting-started/#eleventh
         # You may also follow one of the patterns provided in the TestsGuidelines.md file:
         # https://github.com/PowerShell/DscResources/blob/master/TestsGuidelines.md
+
+        # Define test user accounts
+        $mockUserAccounts = @(
+        "User1",
+        "User2",
+        "User3",
+        "User4",
+        "User5"
+        )
+
+        # Declare mock objects
+        $mockChangeAccess = @("User1")
+        $mockReadAccess = @("User2")
+        $mockFullAccess = @("User3", "User5")
+        $mockNoAcess = @("User4")
+        $mockDefaultChangeAccess = @("User2")
+        $mockDefaultReadAccess = @("User3")
+        $mockDefaultFullAccess = @("User1")
+        $mockDefaultNoAccess = @()
+
 
         $mockSmbShare = (
             New-Object -TypeName Object |
