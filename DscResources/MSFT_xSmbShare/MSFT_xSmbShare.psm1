@@ -383,6 +383,7 @@ function Test-TargetResource
     
     $testResult = $false;
     $share = Get-TargetResource -Name $Name -Path $Path -ErrorAction SilentlyContinue -ErrorVariable ev
+    $differences = $null
     if ($Ensure -ne "Absent")
     {
         if ($share.Ensure -eq "Absent")
@@ -392,8 +393,9 @@ function Test-TargetResource
         elseif ($share.Ensure -eq "Present")
         {
             $Params = 'Name', 'Path', 'Description', 'ChangeAccess', 'ConcurrentUserLimit', 'EncryptData', 'FolderEnumerationMode', 'FullAccess', 'NoAccess', 'ReadAccess', 'Ensure'
-            if ($PSBoundParameters.Keys.Where({($_ -in $Params)}) | ForEach-Object {Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_})
+            if ($PSBoundParameters.Keys.Where({($_ -in $Params)}) | ForEach-Object {$differences = Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_; $differences})
             { 
+                $differences | ForEach-Object {Write-Verbose "$_"}
                 $testResult = $false
             }
             else
