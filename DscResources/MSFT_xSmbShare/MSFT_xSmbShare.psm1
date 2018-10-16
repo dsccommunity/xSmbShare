@@ -99,40 +99,40 @@ Function Set-BoundParameters
     # Define parameters
     Param
     (
-        $psboundparameters
+        $boundparameters
     )
 
     # Check for null access before passing to New-SmbShare
-    if (($psboundparameters.ContainsKey("ChangeAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["ChangeAccess"])))
+    if (($boundparameters.ContainsKey("ChangeAccess")) -and ([string]::IsNullOrEmpty($boundparameters["ChangeAccess"])))
     {
         Write-Verbose "Parameter ChangeAccess is null or empty, removing from collection."
         # Remove the parameter
-        $psboundparameters.Remove("ChangeAccess")
+        $boundparameters.Remove("ChangeAccess")
     }
             
-    if (($psboundparameters.ContainsKey("ReadAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["ReadAccess"])))
+    if (($boundparameters.ContainsKey("ReadAccess")) -and ([string]::IsNullOrEmpty($boundparameters["ReadAccess"])))
     {
         Write-Verbose "Paramater ReadAccess is null or empty, removing from collection."
         # Remove the parameter
-        $psboundparameters.Remove("ReadAccess")
+        $boundparameters.Remove("ReadAccess")
     }
             
-    if (($psboundparameters.ContainsKey("FullAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["FullAccess"])))
+    if (($boundparameters.ContainsKey("FullAccess")) -and ([string]::IsNullOrEmpty($boundparameters["FullAccess"])))
     {
         Write-Verbose "Parameter FullAccess is null or empty, removing from collection."
         # Remove the parameter
-        $psboundparameters.Remove("FullAccess")
+        $boundparameters.Remove("FullAccess")
     }
             
-    if (($psboundparameters.ContainsKey("NoAccess")) -and ([string]::IsNullOrEmpty($psboundparameters["NoAccess"])))
+    if (($boundparameters.ContainsKey("NoAccess")) -and ([string]::IsNullOrEmpty($boundparameters["NoAccess"])))
     {
         Write-Verbose "Parameter NoAccess is null or empty, removing from collection."
         # Remove the parameter
-        $psboundparameters.Remove("NoAccess")
+        $boundparameters.Remove("NoAccess")
     }
 
     # Return the parameter collection
-    return $psboundparameters
+    return $boundparameters
 }
 
 function Remove-AccessPermission
@@ -379,7 +379,7 @@ function Test-TargetResource
     )
     
     # Alter the bound parameters, removing anything that is null or emtpy
-    $PSBoundParameters = Set-BoundParameters -psboundparameters $PSBoundParameters
+    $PSBoundParameters = Set-BoundParameters -boundparameters $PSBoundParameters
     
     $testResult = $false;
     $share = Get-TargetResource -Name $Name -Path $Path -ErrorAction SilentlyContinue -ErrorVariable ev
