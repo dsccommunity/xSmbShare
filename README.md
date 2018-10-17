@@ -19,8 +19,8 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **Path**: Path to the share.
 * **Description**: Description of the share.
 * **ChangeAccess**: Specifies which user will be granted modify permission to access the share.
-* **ConcurrentUserLimit**: Specifies the maximum number of concurrently connected users that the new SMB share may accommodate. 
-If this parameter is set to 0, then the number of users is unlimited. 
+* **ConcurrentUserLimit**: Specifies the maximum number of concurrently connected users that the new SMB share may accommodate.
+If this parameter is set to 0, then the number of users is unlimited.
 The default value is 0.
 * **EncryptData**: Indicates that the share is encrypted.
 * **FolderEnumerationMode**: Specifies which files and folders in the new SMB share are visible to users.
@@ -31,13 +31,20 @@ The default value is 0.
 * **ShareState**: State of the share.
 * **ShareType**: Type of the share.
 * **ShadowCopy**: Specifies if this share is a ShadowCopy.
-* **Special**: Specifies if this share is a Special Share. 
+* **Special**: Specifies if this share is a Special Share.
 Admin shares, default shares, IPC$ share are examples.
 
 
 ## Versions
 
 ### Unreleased
+
+* Update appveyor.yml to use the default template.
+* Added default template files .codecov.yml, .gitattributes, and .gitignore, and
+  .vscode folder.
+
+### 2.1.0.0
+* Corrected typo on ShareState and ShareType descriptions (Specfies -> Specifies)
 
 ### 2.0.0.0
 * Converted appveyor.yml to install Pester from PSGallery instead of from Chocolatey.
@@ -48,14 +55,14 @@ Admin shares, default shares, IPC$ share are examples.
 
 ### 1.0.0.0
 
-* Initial release with the following resources 
+* Initial release with the following resources
     - xSmbShare
 
 
 ## Examples
 #### Ensure the an SMB share exists
 
-This configuration ensures that there is a share with the description of "This is a test SMB Share". 
+This configuration ensures that there is a share with the description of "This is a test SMB Share".
 
 ```powershell
 Configuration ChangeDescriptionConfig
@@ -66,20 +73,20 @@ Configuration ChangeDescriptionConfig
     {
         xSmbShare MySMBShare
         {
-            Ensure = "Present" 
+            Ensure = "Present"
             Name   = "SMBShare1"
-            Path = "C:\Users\Duser1\Desktop"  
-            Description = "This is a test SMB Share"          
+            Path = "C:\Users\Duser1\Desktop"
+            Description = "This is a test SMB Share"
         }
     }
-} 
+}
 
 ChangeDescriptionConfig
 ```
 
 ### Ensure description and permissions for a share
 
-This configuration ensures that the description and permissions for a share are as specified.  
+This configuration ensures that the description and permissions for a share are as specified.
 
 ```powershell
 Configuration ChangeDescriptionAndPermissionsConfig
@@ -92,13 +99,13 @@ Configuration ChangeDescriptionAndPermissionsConfig
 
         xSmbShare MySMBShare
         {
-            Ensure = "Present" 
+            Ensure = "Present"
             Name   = "SMBShare1"
-            Path = "C:\Users\Duser1\Desktop"  
+            Path = "C:\Users\Duser1\Desktop"
             ReadAccess = "User1"
             NoAccess = @("User3", "User4")
             Description = "This is an updated description for this share"
-        } 
+        }
     }
 }
 ChangeDescriptionAndPermissionsConfig
@@ -119,12 +126,12 @@ Configuration RemoveSmbShareConfig
 
         xSmbShare MySMBShare
         {
-            Ensure = "Absent" 
+            Ensure = "Absent"
             Name   = "SMBShare1"
-            Path = "C:\Users\Duser1\Desktop"          
+            Path = "C:\Users\Duser1\Desktop"
         }
     }
-} 
+}
 
 RemoveSmbShareConfig
 ```
