@@ -223,7 +223,7 @@ function Set-TargetResource
             Write-Verbose "Creating share $Name to ensure it is Present"
             
             # Alter bound parameters
-            $psBoundParameters = Set-BoundParameters -psboundparameters $psBoundParameters
+            $psBoundParameters = Set-BoundParameters -boundparameters $psBoundParameters
                         
             # Pass the parameter collection to New-SmbShare
             New-SmbShare @psboundparameters
@@ -393,6 +393,7 @@ function Test-TargetResource
         elseif ($share.Ensure -eq "Present")
         {
             $Params = 'Name', 'Path', 'Description', 'ChangeAccess', 'ConcurrentUserLimit', 'EncryptData', 'FolderEnumerationMode', 'FullAccess', 'NoAccess', 'ReadAccess', 'Ensure'
+            
             if ($PSBoundParameters.Keys.Where({($_ -in $Params)}) | ForEach-Object {$differences = Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_; $differences})
             { 
                 $differences | ForEach-Object {Write-Verbose "$_"}
