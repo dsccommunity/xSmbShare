@@ -396,7 +396,7 @@ function Test-TargetResource
             
             if ($PSBoundParameters.Keys.Where({($_ -in $Params)}) | ForEach-Object {$differences = Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_; $differences})
             { 
-                $differences | ForEach-Object {Write-Verbose "$_"}
+                $differences | ForEach-Object {Write-Verbose "$_" -Verbose}
                 $testResult = $false
             }
             else
