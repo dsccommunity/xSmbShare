@@ -37,14 +37,6 @@ try
     Invoke-TestSetup
 
     InModuleScope $script:DSCResourceName {
-        # TODO: Optionally create any variables here for use by your tests
-
-        # TODO: Complete the Describe blocks below and add more as needed.
-        # The most common method for unit testing is to test by function. For more information
-        # check out this introduction to writing unit tests in Pester:
-        # https://www.simple-talk.com/sysadmin/powershell/practical-powershell-unit-testing-getting-started/#eleventh
-        # You may also follow one of the patterns provided in the TestsGuidelines.md file:
-        # https://github.com/PowerShell/DscResources/blob/master/TestsGuidelines.md
 
         # Define test user accounts
         $mockUserAccounts = @(
@@ -170,11 +162,6 @@ try
                     Ensure = "Present"
                 }
 
-                # Set the script level parameters
-                #$script:ChangeAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Change'}
-                #$script:ReadAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Read'}
-                #$script:FullAccess = $mockSmbShareAccess | Where-Object {$_.AccessRight -eq 'Full'}
-                #$script:NoAccess = @()
                 # Init the script variables
                 $script:ChangeAccess = @()
                 $script:ReadAccess = @()

@@ -223,10 +223,10 @@ function Set-TargetResource
             Write-Verbose "Creating share $Name to ensure it is Present"
             
             # Alter bound parameters
-            $psBoundParameters = Set-BoundParameters -boundparameters $psBoundParameters
+            $newShareParameters = Set-BoundParameters -boundparameters $psBoundParameters
                         
             # Pass the parameter collection to New-SmbShare
-            New-SmbShare @psboundparameters
+            New-SmbShare @newShareParameters
         }
         else
         {
@@ -379,11 +379,11 @@ function Test-TargetResource
     )
     
     # Alter the bound parameters, removing anything that is null or emtpy
-    $PSBoundParameters = Set-BoundParameters -boundparameters $PSBoundParameters
+    $alteredBoundParameters = Set-BoundParameters -boundparameters $PSBoundParameters
     
     $testResult = $false;
     $share = Get-TargetResource -Name $Name -Path $Path -ErrorAction SilentlyContinue -ErrorVariable ev
-    $differences = $null
+    $differences = @()
     if ($Ensure -ne "Absent")
     {
         if ($share.Ensure -eq "Absent")
@@ -394,10 +394,26 @@ function Test-TargetResource
         {
             $Params = 'Name', 'Path', 'Description', 'ChangeAccess', 'ConcurrentUserLimit', 'EncryptData', 'FolderEnumerationMode', 'FullAccess', 'NoAccess', 'ReadAccess', 'Ensure'
             
-            if ($PSBoundParameters.Keys.Where({($_ -in $Params)}) | ForEach-Object {$differences = Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_; $differences})
+            # Get all matching parameters from alteredBoundParameters that are in Params
+            $matchingParameters = $alteredBoundParameters.Keys.Where({($_ -in $Params)})
+            
+            if ($null -ne $matchingParameters)
             { 
-                $differences | ForEach-Object {Write-Verbose "$_" -Verbose}
-                $testResult = $false
+                Foreach ($matchingParameter in $matchingParameters)
+                {
+                    $differences += Compare-Object -ReferenceObject $alteredBoundParameters[$matchingParameter] -DifferenceObject $share.$matchingParameter #; $differences
+                }
+                
+                # Check to see if there is anything in $differences
+                if (($null -ne $differences) -and ($differences.Length -gt 0))
+                {
+                    $differences | ForEach-Object {Write-Verbose "$_" -Verbose}
+                    $testResult = $false
+                }
+                else 
+                {
+                    $testResult = $true
+                }
             }
             else
             {
