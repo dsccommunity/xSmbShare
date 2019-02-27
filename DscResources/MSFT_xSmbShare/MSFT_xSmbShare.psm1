@@ -399,7 +399,7 @@ function Test-TargetResource
             
             if ($null -ne $matchingParameters)
             { 
-                Foreach ($matchingParameter in $matchingParameters)
+                foreach ($matchingParameter in $matchingParameters)
                 {
                     $differences += Compare-Object -ReferenceObject $alteredBoundParameters[$matchingParameter] -DifferenceObject $share.$matchingParameter #; $differences
                 }
