@@ -407,7 +407,7 @@ function Test-TargetResource
                 # Check to see if there is anything in $differences
                 if (($null -ne $differences) -and ($differences.Length -gt 0))
                 {
-                    $differences | ForEach-Object {Write-Verbose "$_" -Verbose}
+                    $differences | ForEach-Object {Write-Verbose "$_" -Message}
                     $testResult = $false
                 }
                 else 
