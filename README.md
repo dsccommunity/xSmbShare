@@ -38,6 +38,7 @@ Admin shares, default shares, IPC$ share are examples.
 
 ### Unreleased
 
+* Improved Code logic & cosmetic changes
 * Update appveyor.yml to use the default template.
 * Added default template files .codecov.yml, .gitattributes, and .gitignore, and
   .vscode folder.
