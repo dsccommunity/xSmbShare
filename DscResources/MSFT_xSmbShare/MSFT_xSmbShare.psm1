@@ -21,7 +21,7 @@ function Get-TargetResource
     if ($smbShare -ne $null)
     {
         $smbShareAccess = Get-SmbShareAccess -Name $Name
-        $smbShareAccess | %  {
+        $smbShareAccess | ForEach-Object  {
             $access = $_;
             if ($access.AccessRight -eq 'Change' -and $access.AccessControlType -eq 'Allow')
             {
@@ -30,7 +30,7 @@ function Get-TargetResource
             elseif ($access.AccessRight -eq 'Read' -and $access.AccessControlType -eq 'Allow')
             {
                 $readAccess += $access.AccountName
-            }            
+            }
             elseif ($access.AccessRight -eq 'Full' -and $access.AccessControlType -eq 'Allow')
             {
                 $fullAccess += $access.AccountName
@@ -44,24 +44,24 @@ function Get-TargetResource
     else
     {
         Write-Verbose "Share with name $Name does not exist"
-    } 
+    }
 
     $returnValue = @{
-        Name = $smbShare.Name
-        Path = $smbShare.Path
-        Description = $smbShare.Description
-        ConcurrentUserLimit = $smbShare.ConcurrentUserLimit
-        EncryptData = $smbShare.EncryptData
-        FolderEnumerationMode = $smbShare.FolderEnumerationMode                
-        ShareState = $smbShare.ShareState
-        ShareType = $smbShare.ShareType
-        ShadowCopy = $smbShare.ShadowCopy
-        Special = $smbShare.Special
-        ChangeAccess = $changeAccess
-        ReadAccess = $readAccess
-        FullAccess = $fullAccess
-        NoAccess = $noAccess     
-        Ensure = if($smbShare) {"Present"} else {"Absent"}
+        Name                  = $smbShare.Name
+        Path                  = $smbShare.Path
+        Description           = $smbShare.Description
+        ConcurrentUserLimit   = $smbShare.ConcurrentUserLimit
+        EncryptData           = $smbShare.EncryptData
+        FolderEnumerationMode = $smbShare.FolderEnumerationMode
+        ShareState            = $smbShare.ShareState
+        ShareType             = $smbShare.ShareType
+        ShadowCopy            = $smbShare.ShadowCopy
+        Special               = $smbShare.Special
+        ChangeAccess          = $changeAccess
+        ReadAccess            = $readAccess
+        FullAccess            = $fullAccess
+        NoAccess              = $noAccess
+        Ensure                = if($smbShare) {"Present"} else {"Absent"}
     }
 
     $returnValue
@@ -71,7 +71,7 @@ function Set-AccessPermission
 {
     [CmdletBinding()]
     Param
-    (           
+    (
         $ShareName,
 
         [string[]]
@@ -94,11 +94,52 @@ function Set-AccessPermission
     }
 }
 
+Function Set-BoundParameters
+{
+    # Define parameters
+    Param
+    (
+        $BoundParameters
+    )
+
+    # Check for null access before passing to New-SmbShare
+    if (($BoundParameters.ContainsKey("ChangeAccess")) -and ([string]::IsNullOrEmpty($BoundParameters["ChangeAccess"])))
+    {
+        Write-Verbose "Parameter ChangeAccess is null or empty, removing from collection."
+        # Remove the parameter
+        $BoundParameters.Remove("ChangeAccess")
+    }
+
+    if (($BoundParameters.ContainsKey("ReadAccess")) -and ([string]::IsNullOrEmpty($BoundParameters["ReadAccess"])))
+    {
+        Write-Verbose "Paramater ReadAccess is null or empty, removing from collection."
+        # Remove the parameter
+        $BoundParameters.Remove("ReadAccess")
+    }
+
+    if (($BoundParameters.ContainsKey("FullAccess")) -and ([string]::IsNullOrEmpty($BoundParameters["FullAccess"])))
+    {
+        Write-Verbose "Parameter FullAccess is null or empty, removing from collection."
+        # Remove the parameter
+        $BoundParameters.Remove("FullAccess")
+    }
+
+    if (($BoundParameters.ContainsKey("NoAccess")) -and ([string]::IsNullOrEmpty($BoundParameters["NoAccess"])))
+    {
+        Write-Verbose "Parameter NoAccess is null or empty, removing from collection."
+        # Remove the parameter
+        $BoundParameters.Remove("NoAccess")
+    }
+
+    # Return the parameter collection
+    return $BoundParameters
+}
+
 function Remove-AccessPermission
 {
     [CmdletBinding()]
     Param
-    (           
+    (
         $ShareName,
 
         [string[]]
@@ -114,7 +155,8 @@ function Remove-AccessPermission
     if ($AccessPermission -eq "Change" -or $AccessPermission -eq "Read" -or $AccessPermission -eq "Full")
     {
         Revoke-SmbShareAccess -Name $Name -AccountName $UserName -Force
-    }
+
+}
     else
     {
         UnBlock-SmbShareAccess -Name $Name -AccountName $userName -Force
@@ -164,7 +206,7 @@ function Set-TargetResource
         $Ensure = 'Present'
     )
 
-    $psboundparameters.Remove("Debug")
+    $PSBoundParameters.Remove("Debug")
 
     $shareExists = $false
     $smbShare = Get-SmbShare -Name $Name -ErrorAction SilentlyContinue
@@ -177,94 +219,115 @@ function Set-TargetResource
     {
         if ($shareExists -eq $false)
         {
-            $psboundparameters.Remove("Ensure")
+            $PSBoundParameters.Remove("Ensure")
             Write-Verbose "Creating share $Name to ensure it is Present"
-            New-SmbShare @psboundparameters
+
+            # Alter bound parameters
+            $newShareParameters = Set-BoundParameters -BoundParameters $PSBoundParameters
+
+            # Pass the parameter collection to New-SmbShare
+            New-SmbShare @newShareParameters
         }
         else
         {
             # Need to call either Set-SmbShare or *ShareAccess cmdlets
-            if ($psboundparameters.ContainsKey("ChangeAccess"))
+            if ($PSBoundParameters.ContainsKey("ChangeAccess"))
             {
-                $changeAccessValue = $psboundparameters["ChangeAccess"]
-                $psboundparameters.Remove("ChangeAccess")
+                $changeAccessValue = $PSBoundParameters["ChangeAccess"]
+                $PSBoundParameters.Remove("ChangeAccess")
             }
-            if ($psboundparameters.ContainsKey("ReadAccess"))
+            if ($PSBoundParameters.ContainsKey("ReadAccess"))
             {
-                $readAccessValue = $psboundparameters["ReadAccess"]
-                $psboundparameters.Remove("ReadAccess")
+                $readAccessValue = $PSBoundParameters["ReadAccess"]
+                $PSBoundParameters.Remove("ReadAccess")
             }
-            if ($psboundparameters.ContainsKey("FullAccess"))
+            if ($PSBoundParameters.ContainsKey("FullAccess"))
             {
-                $fullAccessValue = $psboundparameters["FullAccess"]
-                $psboundparameters.Remove("FullAccess")
+                $fullAccessValue = $PSBoundParameters["FullAccess"]
+                $PSBoundParameters.Remove("FullAccess")
             }
-            if ($psboundparameters.ContainsKey("NoAccess"))
+            if ($PSBoundParameters.ContainsKey("NoAccess"))
             {
-                $noAccessValue = $psboundparameters["NoAccess"]
-                $psboundparameters.Remove("NoAccess")
+                $noAccessValue = $PSBoundParameters["NoAccess"]
+                $PSBoundParameters.Remove("NoAccess")
             }
-            
+
             # Use Set-SmbShare for performing operations other than changing access
-            $psboundparameters.Remove("Ensure")
-            $psboundparameters.Remove("Path")
+            $PSBoundParameters.Remove("Ensure")
+            $PSBoundParameters.Remove("Path")
             Set-SmbShare @PSBoundParameters -Force
-            
+
             # Use *SmbShareAccess cmdlets to change access
-            $smbshareAccessValues = Get-SmbShareAccess -Name $Name
+            $smbShareAccessValues = Get-SmbShareAccess -Name $Name
+
+            # Remove Change permissions
+            $smbShareAccessValues | Where-Object {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Change'} `
+                                    | ForEach-Object {
+                                        Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Change
+                                        }
+
             if ($ChangeAccess -ne $null)
             {
-                # Blow off whatever is in there and replace it with this list
-                $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Change'} `
-                                      | % {
-                                            Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Change
-                                          }
-                                  
-                $changeAccessValue | % {
+                # Add change permissions
+                $changeAccessValue | ForEach-Object {
                                         Set-AccessPermission -ShareName $Name -AccessPermission "Change" -Username $_
                                        }
             }
-            $smbshareAccessValues = Get-SmbShareAccess -Name $Name
+
+            $smbShareAccessValues = Get-SmbShareAccess -Name $Name
+
+            # Remove read access
+            $smbShareAccessValues | Where-Object {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Read'} `
+                                    | ForEach-Object {
+                                        Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Read
+                                        }
+
             if ($ReadAccess -ne $null)
             {
-                # Blow off whatever is in there and replace it with this list
-                $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Read'} `
-                                      | % {
-                                            Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Read
-                                          }
-
-                $readAccessValue | % {
-                                       Set-AccessPermission -ShareName $Name -AccessPermission "Read" -Username $_                        
+                # Add read access
+                $readAccessValue | ForEach-Object {
+                                       Set-AccessPermission -ShareName $Name -AccessPermission "Read" -Username $_
                                      }
             }
-            $smbshareAccessValues = Get-SmbShareAccess -Name $Name
+
+
+            $smbShareAccessValues = Get-SmbShareAccess -Name $Name
+
+            # Remove full access
+            $smbShareAccessValues | Where-Object {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Full'} `
+                                    | ForEach-Object {
+                                        Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Full
+                                        }
+
+
             if ($FullAccess -ne $null)
             {
-                # Blow off whatever is in there and replace it with this list
-                $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Allow' -and $_.AccessRight -eq 'Full'} `
-                                      | % {
-                                            Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission Full
-                                          }
 
-                $fullAccessValue | % {
-                                        Set-AccessPermission -ShareName $Name -AccessPermission "Full" -Username $_                        
+                # Add full access
+                $fullAccessValue | ForEach-Object {
+                                        Set-AccessPermission -ShareName $Name -AccessPermission "Full" -Username $_
                                      }
             }
-            $smbshareAccessValues = Get-SmbShareAccess -Name $Name
+
+            $smbShareAccessValues = Get-SmbShareAccess -Name $Name
+
+            # Remove explicit deny
+            $smbShareAccessValues | Where-Object {$_.AccessControlType  -eq 'Deny'} `
+                                    | ForEach-Object {
+                                        Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission No
+                                        }
+
+
             if ($NoAccess -ne $null)
             {
-                # Blow off whatever is in there and replace it with this list
-                $smbshareAccessValues | ? {$_.AccessControlType  -eq 'Deny'} `
-                                      | % {
-                                            Remove-AccessPermission -ShareName $Name -UserName $_.AccountName -AccessPermission No
-                                          }
-                $noAccessValue | % {
+                # Add explicit deny
+                $noAccessValue | ForEach-Object {
                                       Set-AccessPermission -ShareName $Name -AccessPermission "No" -Username $_
                                    }
             }
         }
     }
-    else 
+    else
     {
         Write-Verbose "Removing share $Name to ensure it is Absent"
         Remove-SmbShare -name $Name -Force
@@ -314,8 +377,13 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present'
     )
+
+    # Alter the bound parameters, removing anything that is null or emtpy
+    $alteredBoundParameters = Set-BoundParameters -boundparameters $PSBoundParameters
+
     $testResult = $false;
     $share = Get-TargetResource -Name $Name -Path $Path -ErrorAction SilentlyContinue -ErrorVariable ev
+    $differences = @()
     if ($Ensure -ne "Absent")
     {
         if ($share.Ensure -eq "Absent")
@@ -325,9 +393,27 @@ function Test-TargetResource
         elseif ($share.Ensure -eq "Present")
         {
             $Params = 'Name', 'Path', 'Description', 'ChangeAccess', 'ConcurrentUserLimit', 'EncryptData', 'FolderEnumerationMode', 'FullAccess', 'NoAccess', 'ReadAccess', 'Ensure'
-            if ($PSBoundParameters.Keys.Where({$_ -in $Params}) | ForEach-Object {Compare-Object -ReferenceObject $PSBoundParameters.$_ -DifferenceObject $share.$_})
-            { 
-                $testResult = $false
+
+            # Get all matching parameters from alteredBoundParameters that are in Params
+            $matchingParameters = $alteredBoundParameters.Keys.Where({($_ -in $Params)})
+
+            if ($null -ne $matchingParameters)
+            {
+                foreach ($matchingParameter in $matchingParameters)
+                {
+                    $differences += Compare-Object -ReferenceObject $alteredBoundParameters[$matchingParameter] -DifferenceObject $share.$matchingParameter #; $differences
+                }
+
+                # Check to see if there is anything in $differences
+                if (($null -ne $differences) -and ($differences.Length -gt 0))
+                {
+                    $differences | ForEach-Object {Write-Verbose -Message "$_"}
+                    $testResult = $false
+                }
+                else
+                {
+                    $testResult = $true
+                }
             }
             else
             {
@@ -351,4 +437,3 @@ function Test-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-
