@@ -24,6 +24,7 @@ If this parameter is set to 0, then the number of users is unlimited.
 The default value is 0.
 * **EncryptData**: Indicates that the share is encrypted.
 * **FolderEnumerationMode**: Specifies which files and folders in the new SMB share are visible to users.
+* **CachingMode**: Specifies the caching mode of the offline files for the SMB share. { 'None' | 'Manual' | 'Programs' | 'Documents' | 'BranchCache' }
 * **FullAccess**: Specifies which accounts are granted full permission to access the share.
 * **NoAccess**: Specifies which accounts are denied access to the share.
 * **ReadAccess**: Specifies which accounts are granted read permission to access the share.
@@ -42,6 +43,9 @@ Admin shares, default shares, IPC$ share are examples.
 * Update appveyor.yml to use the default template.
 * Added default template files .codecov.yml, .gitattributes, and .gitignore, and
   .vscode folder.
+* Changes to xSmbShare
+  * Added support for parameter CachingMode ([issue #8](https://github.com/PowerShell/xSmbShare/issues/8)).
+    [Martin Vokurek (@MartinVokurek)](https://github.com/MartinVokurek)
 
 ### 2.1.0.0
 
