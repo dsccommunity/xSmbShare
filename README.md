@@ -43,7 +43,7 @@ Admin shares, default shares, IPC$ share are examples.
 * Added default template files .codecov.yml, .gitattributes, and .gitignore, and
   .vscode folder.
 * Changes to xSmbShare
-  * Added support for parameter CachingMode. ([issue #8](https://github.com/PowerShell/xSmbShare/issues/8)).
+  * Added support for parameter CachingMode ([issue #8](https://github.com/PowerShell/xSmbShare/issues/8)).
     [Martin Vokurek (@MartinVokurek)](https://github.com/MartinVokurek)
 
 ### 2.1.0.0
