@@ -1,6 +1,6 @@
 @{
 # Version number of this module.
-moduleVersion = '2.1.0.0'
+moduleVersion = '2.2.0.0'
 
 # ID used to uniquely identify this module
 GUID = '8831ca9a-3c47-4a5b-b401-29635dd24381'
@@ -47,7 +47,13 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = '* Corrected typo on ShareState and ShareType descriptions (Specfies -> Specifies)
+        ReleaseNotes = '* Improved Code logic & cosmetic changes
+* Update appveyor.yml to use the default template.
+* Added default template files .codecov.yml, .gitattributes, and .gitignore, and
+  .vscode folder.
+* Changes to xSmbShare
+  * Added support for parameter CachingMode ([issue 8](https://github.com/PowerShell/xSmbShare/issues/8)).
+    [Martin Vokurek (@MartinVokurek)](https://github.com/MartinVokurek)
 
 '
 
@@ -55,6 +61,7 @@ PrivateData = @{
 
 } # End of PrivateData hashtable
 }
+
 
 
 
