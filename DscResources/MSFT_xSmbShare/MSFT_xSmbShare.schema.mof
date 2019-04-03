@@ -9,6 +9,7 @@ class MSFT_xSmbShare : OMI_BaseResource
     [Write, Description("Specifies the maximum number of concurrently connected users that the new SMB share may accommodate. If this parameter is set to zero (0), then the number of users is unlimited. The default value is zero (0).")] Uint32 ConcurrentUserLimit;
     [Write, Description("Indicates that the share is encrypted.")] Boolean EncryptData;
     [Write, Description("Specifies which files and folders in the new SMB share are visible to users."), ValueMap{"AccessBased","Unrestricted"}, Values{"AccessBased","Unrestricted"}] String FolderEnumerationMode;
+    [Write, Description("Specifies the caching mode of the offline files for the SMB share."), ValueMap{"None","Manual","Programs","Documents","BranchCache"}, Values{"None","Manual","Programs","Documents","BranchCache"}] String CachingMode;
     [Write, Description("Specifies which accounts are granted full permission to access the share.")] String FullAccess[];
     [Write, Description("Specifies which accounts are denied access to the share.")] String NoAccess[];
     [Write, Description("Specifies which user is granted read permission to access the share.")] String ReadAccess[];
