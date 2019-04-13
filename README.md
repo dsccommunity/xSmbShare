@@ -1,4 +1,10 @@
-# xSmbShare Resource
+# **THIS MODULE HAS BEEN DEPRECATED**
+
+It will no longer be released.
+Please use the 'SmbShare' resource in [ComputerManagementDsc](https://github.com/PowerShell/ComputerManagementDsc)
+instead.
+
+## xSmbShare Resource
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ttp6jlhjyef83sic/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xsmbshare/branch/master)
 
@@ -38,6 +44,10 @@ Admin shares, default shares, IPC$ share are examples.
 ## Versions
 
 ### Unreleased
+
+* THIS MODULE HAS BEEN DEPRECATED. This resource module will no longer be
+  released. Please use the resource 'SmbShare' in the ComputerManagementDsc
+  module instead.
 
 ### 2.2.0.0
 
